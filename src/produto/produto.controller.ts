@@ -6,7 +6,7 @@ import PdfPrinter, {  } from 'pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import xl from 'excel4node';
 import { response } from 'express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
@@ -18,35 +18,41 @@ export class ProdutoController {
 
   @UseGuards(JwtAuthGuard)
   @Post('register')
+  @ApiOperation({summary: 'Criação de um novo produto'})
   async create(@Body() createProdutoDto: CreateProdutoDto) {
     return await this.produtoService.create(createProdutoDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiOperation({summary: 'Busca todos os produtos existentes'})
   findAll() {
     return this.produtoService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
+  @ApiOperation({summary: 'Busca um produto existente pelo seu id'})
   findOne(@Param('id') id: number) {
     return this.produtoService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @ApiOperation({summary: 'Atualiza alguma informção de um produto existente'})
   update(@Param('id') id: number, @Body() updateProdutoDto: UpdateProdutoDto) {
     return this.produtoService.update(+id, updateProdutoDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @ApiOperation({summary: 'Deleta um produto'})
   remove(@Param('id') id: number) {
     return this.produtoService.remove(+id);
   }
 
   @Get('csv')
+  @ApiOperation({summary: 'Converte dados da tabela de produtos para CSV'})
   async produtoCsv(){
     const produtos = await this.produtoService.findAll();
 
@@ -102,6 +108,7 @@ export class ProdutoController {
   }
 
   @Get('pdf')
+  @ApiOperation({summary: 'Converte os dados da tabela de produto para PDF'})
   async produtoPdf(){
 
     const produtos = await this.produtoService.findAll();
