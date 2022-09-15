@@ -27,6 +27,14 @@ export class UserService {
     }
   }
 
+  async findOneEmail(email: string) {
+    try{
+      return await this.userRepository.findOneOrFail({where: {email}});
+    } catch (error){
+      throw new NotFoundException(error.message);
+    }
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOneOrFail({where: {id}});
     this.userRepository.merge(user, updateUserDto);

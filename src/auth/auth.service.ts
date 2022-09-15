@@ -15,7 +15,7 @@ export class AuthService {
 
       let usuario: User;
       try {
-        usuario = await this.userService.findOne(user.email);
+        usuario = await this.userService.findOneEmail(user.email);
       } catch (error){
         return 'Email não cadastrado';
       }
