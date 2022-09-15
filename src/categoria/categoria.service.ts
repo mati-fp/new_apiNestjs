@@ -10,7 +10,8 @@ export class CategoriaService {
   constructor(@InjectRepository(Categoria) private readonly categoriaRepository: Repository<Categoria>) {}
   
   async create(createCategoriaDto: CreateCategoriaDto) {
-    return await this.categoriaRepository.create(createCategoriaDto);
+    const categoria = await this.categoriaRepository.create(createCategoriaDto);
+    return await this.categoriaRepository.save(categoria);
   }
 
   async findAll() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiBody, ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
-import  compareSync  from 'bcrypt';
+import { compareSync } from "bcrypt";
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -10,8 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(private readonly userService: UserService, private readonly jwtService: JwtService){}
 
-  @ApiProperty()
-    async login(user){
+    async login(user: { email: string; password: any; }){
 
       let usuario: User;
       try {
@@ -23,7 +22,7 @@ export class AuthService {
       const isPasswordValid =  await compareSync(user.password, usuario.password);
       if(!isPasswordValid) return 'Senha inválida';
 
-      const payload ={ sub: user.id, email: user.email }
+      const payload ={ sub: usuario.id, email: usuario.email }
       
       return {
         token: this.jwtService.sign(payload),

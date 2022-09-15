@@ -10,7 +10,8 @@ export class ProdutoService {
   constructor(@InjectRepository(Produto) private readonly produtoRepository: Repository<Produto>) {}
 
   async create(createProdutoDto: CreateProdutoDto) {
-    return await this.produtoRepository.create(createProdutoDto);
+    const produto = await this.produtoRepository.create(createProdutoDto);
+    return await this.produtoRepository.save(produto);
   }
 
   async findAll() {

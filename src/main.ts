@@ -12,7 +12,9 @@ async function bootstrap() {
     .setDescription('A api do desafio que roda com o framework NestJS')
     .setVersion('1.0')
     .addTag('default')
+    .addBearerAuth()
     .build();
+    
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
