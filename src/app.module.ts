@@ -26,6 +26,7 @@ import { Categoria } from './categoria/entities/categoria.entity';
           password: configService.get('TYPEORM_PASSWORD') as any,
           database: configService.get('TYPEORM_DATABASE') as any,
           entities: [User, Produto, Categoria],
+          logging: true,
           cli: {
             migrationsDir: configService.get('TYPEORM_MIGRATIONS_DIR') as any,
           }

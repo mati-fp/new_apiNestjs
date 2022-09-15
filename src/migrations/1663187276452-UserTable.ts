@@ -40,7 +40,8 @@ export class UserTable1662003912530 implements MigrationInterface {
                     {
                         name: "deleted_at",
                         type: "timestamp",
-                        default: "now()",
+                        default: null,
+                        isNullable: true,
                     },
                 ]
             }),

@@ -36,7 +36,8 @@ export class CategoriaTable1662004212353 implements MigrationInterface {
                     {
                         name: "deleted_at",
                         type: "timestamp",
-                        default: "now()",
+                        default: null,
+                        isNullable: true,
                     },
                 ]
             }),
