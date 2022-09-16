@@ -1,5 +1,5 @@
 import { Categoria } from "../../categoria/entities/categoria.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: "produtos" })
 export class Produto {
@@ -19,7 +19,9 @@ export class Produto {
     @Column({ default: true })
     ativo: boolean;
 
-    @Column()
+    @JoinColumn({ name: 'categoria_id', referencedColumnName: 'id' })
+    @ManyToOne(type => Categoria, Categoria => Categoria.id)
+    @Column({ name: "categoria_id" })
     categoria_id: number;
 
     @CreateDateColumn({ name : 'created_at'})
@@ -31,6 +33,6 @@ export class Produto {
     @DeleteDateColumn({ name : 'deleted_at'})
     deletedAt: string;
 
-    @ManyToOne(type => Categoria, Categoria => Categoria.id) //(id: number) => Repository<Categoria>
-    categoria: Categoria;
+     //(id: number) => Repository<Categoria>
+    //categoria: Categoria;
 }

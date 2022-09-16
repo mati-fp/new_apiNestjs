@@ -15,7 +15,7 @@ export class ProdutoService {
   }
 
   async findAll() {
-    return await this.produtoRepository.find({select: ['id', 'nome', 'tipoQuantidade', 'quantidade', 'ativo', 'categoria']});
+    return await this.produtoRepository.find({select: ['id', 'nome', 'tipoQuantidade', 'quantidade', 'ativo', 'categoria_id']});
   }
 
   async findOne(id: number) {

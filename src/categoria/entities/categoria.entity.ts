@@ -1,5 +1,5 @@
 import { Produto } from "src/produto/entities/produto.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Repository, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, Repository, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: "categorias" })
 export class Categoria {
@@ -22,6 +22,7 @@ export class Categoria {
     @DeleteDateColumn({ name : 'deleted_at'})
     deletedAt: string;
 
+    @JoinColumn({referencedColumnName: 'id' })
     @OneToMany(type => Produto, Produto => Produto.categoria_id) //(id: number) => Repository<Produto>
     produtos: Produto[];
 }
