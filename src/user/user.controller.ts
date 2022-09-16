@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Usuário')
 @Controller('user')
@@ -15,6 +16,7 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
   @ApiOperation({summary: 'Busca todos os usuários existentes'})
@@ -22,6 +24,7 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id')
   @ApiOperation({summary: 'Busca um usuário existente pelo seu ID'})
@@ -29,6 +32,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({summary: 'Atualiza um dados de um usuário existente'})
@@ -36,6 +40,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({summary: 'Deleta um usuário'})
