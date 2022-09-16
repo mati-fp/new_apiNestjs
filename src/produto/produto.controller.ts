@@ -7,7 +7,6 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import xl from 'excel4node';
 import { response } from 'express';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Produto')
