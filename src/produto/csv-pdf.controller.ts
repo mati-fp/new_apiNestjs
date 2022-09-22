@@ -1,10 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, StreamableFile } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProdutoService } from './produto.service';
-import { xl } from 'excel4node';
-import { response } from 'express';
-import PdfPrinter from 'pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+const createCsvWriter = require('csv-writer').createArrayCsvWriter;
+var PdfPrinter = require('pdfmake');
+import * as fs from 'fs'
+import { join } from 'path';
+import pdfmake from 'pdfmake'
+
+
 
 @Controller('exporta')
 @ApiTags('Rota para Download da tabela de produtos em Csv e PDF')
@@ -13,13 +17,23 @@ export class CsvPdfController {
 
   @Get('csv')
   @ApiOperation({summary: 'Converte dados da tabela de produtos para CSV'})
-  async produtoCsv(){
+  async newProdutosCsv(/*@Res() res: Response*/): Promise<StreamableFile>{
+    
     const produtos = await this.produtoService.findAll();
+    
+    const csvWriter = createCsvWriter({
+      path: './produtos.csv',
+      header: [
+          'id',
+          'nome',
+          'Tipo Quantidade',
+          'Quantidade',
+          'Ativo',
+          'Categoria Id'
+      ]
+  });
 
-    var wb = new xl.Workbook();
-    var ws = wb.addWorksheet('Produtos');
-
-    const body = [];
+    var body = [];
 
     for await (let produto of produtos) {
       const rows = new Array();
@@ -29,47 +43,28 @@ export class CsvPdfController {
       rows.push(produto.quantidade);
       rows.push(produto.ativo);
       rows.push(produto.categoria_id);
-      rows.push(produto.createdAt);
-      rows.push(produto.updatedAt);
-      rows.push(produto.deletedAt);
 
       body.push(rows);
+      
     }
 
-    const titulos = [
-      "ID",
-      "Nome",
-      "Unidade",
-      "Quantidade",
-      "Ativo",
-      "Categoria",
-      "DataDeCriacao",
-      "DataDeAtualizacao",
-      "DataDeDelecao",
-    ];
-
-    let titulosIndex = 1;
-    titulos.forEach(titulo => {
-      ws.cell(1, titulosIndex++).string(titulo);
+    csvWriter.writeRecords(body)       // returns a promise
+    .then(() => {
+        console.log('...Done');
     });
 
-    let rowIndex = 2;
-    body.forEach(record => {
-      let columnIndex = 1;
-      Object.keys(record).forEach(columnName => {
-        ws.cell(rowIndex, columnIndex++).string(record[columnName])
-      });
-      rowIndex++
-    });
+    const readStream =fs.createReadStream(join(process.cwd(), './produtos.csv'))
 
-    await response.end(wb.write('produtos.csv'));
-    response.send("Relatório Concluido");
-
+    return new StreamableFile(readStream);
+    
   }
+
+
 
   @Get('pdf')
   @ApiOperation({summary: 'Converte os dados da tabela de produto para PDF'})
-  async produtoPdf(){
+  async produtoPdf(): Promise<StreamableFile>
+  {
 
     const produtos = await this.produtoService.findAll();
 
@@ -105,7 +100,7 @@ export class CsvPdfController {
     }
 
     const docDefinitions: TDocumentDefinitions = {
-      defaultStyle: { font: 'Times-Roman'},
+      defaultStyle: { font: 'Helvetica'},
       content: [
         {
           columns: [
@@ -151,7 +146,7 @@ export class CsvPdfController {
     const pdfDoc = printer.createPdfKitDocument(docDefinitions);
     
 
-    //pdfDoc.pipe(fs.createWriteStream("RelatorioProdutos.pdf"));
+    pdfDoc.pipe(fs.createWriteStream("RelatorioProdutos.pdf"));
 
     const chunks = [];
 
@@ -161,14 +156,16 @@ export class CsvPdfController {
 
     pdfDoc.end();
 
+    let result
     pdfDoc.on("end", () => {
-      const result = Buffer.concat(chunks);
-      response.end(result);
+      result = Buffer.concat(chunks);
+      
     });
 
-    
+    const readStream =fs.createReadStream(join(process.cwd(), './RelatorioProdutos.pdf'))
 
-    response.send("Relatório Concluído");
+    return new StreamableFile(readStream);
+
   }
 
 }

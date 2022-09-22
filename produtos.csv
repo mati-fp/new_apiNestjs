@@ -1,0 +1,6 @@
+id,nome,Tipo Quantidade,Quantidade,Ativo,Categoria Id
+1,Maçã,Kg,1000,true,3
+2,Alface Crespo,Kg,600,true,1
+3,Vassoura,Uni,100,true,2
+4,Esfregão,Uni,100,true,2
+5,Banana,Uni,100,true,3
