@@ -18,7 +18,7 @@ export class AppController {
   @Post('file')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
-      destination: './files',
+      destination: './uploads',
       filename: (req, file, callback) => {
         const uniquePreffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const ext = extname(file.originalname);
