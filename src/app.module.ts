@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './user/entities/user.entity';
 import { Produto } from './produto/entities/produto.entity';
 import { Categoria } from './categoria/entities/categoria.entity';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { Categoria } from './categoria/entities/categoria.entity';
     UserModule,
     CategoriaModule,
     ProdutoModule,
-    AuthModule
+    AuthModule,
+    MulterModule.register({dest: './uploads'})
   ],
   controllers: [AppController],
   providers: [AppService],

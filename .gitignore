@@ -1,7 +1,8 @@
 # compiled output
 /dist
 /node_modules
-
+./produtos.csv
+./RelatorioProdutos.pdf
 # Logs
 logs
 *.log

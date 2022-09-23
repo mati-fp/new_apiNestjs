@@ -1,4 +1,4 @@
-import { Controller, Get, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Header, Res, StreamableFile } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProdutoService } from './produto.service';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
@@ -16,8 +16,9 @@ export class CsvPdfController {
     constructor(private readonly produtoService: ProdutoService) {}
 
   @Get('csv')
+  @Header('Content-Disposition', 'attachment; filename="produtos.csv"')
   @ApiOperation({summary: 'Converte dados da tabela de produtos para CSV'})
-  async newProdutosCsv(/*@Res() res: Response*/): Promise<StreamableFile>{
+  async newProdutosCsv(): Promise<StreamableFile>{
     
     const produtos = await this.produtoService.findAll();
     
@@ -62,6 +63,7 @@ export class CsvPdfController {
 
 
   @Get('pdf')
+  @Header('Content-Disposition', 'attachment; filename="RelatorioProdutos.pdf"')
   @ApiOperation({summary: 'Converte os dados da tabela de produto para PDF'})
   async produtoPdf(): Promise<StreamableFile>
   {
@@ -162,8 +164,11 @@ export class CsvPdfController {
       
     });
 
-    const readStream =fs.createReadStream(join(process.cwd(), './RelatorioProdutos.pdf'))
+    const readStream =fs.createReadStream(join(process.cwd(), './RelatorioProdutos.pdf'));
 
+    
+
+    //return res.download(filename)
     return new StreamableFile(readStream);
 
   }
